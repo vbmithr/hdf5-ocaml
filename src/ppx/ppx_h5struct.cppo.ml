@@ -87,7 +87,7 @@ let rec extract_fields expression =
     | (_, name) :: (_, type_) :: expressions ->
       let name =
         match name.pexp_desc with
-        | Pexp_constant (Pconst_string (name, _)) -> name
+        | Pexp_constant (Pconst_string (name, _, _)) -> name
         | _ ->
           Location.raise_errorf ~loc:name.pexp_loc
             "[%%h5struct] invalid field %s, field name must be a string constant" id
@@ -153,7 +153,7 @@ let rec extract_fields expression =
         | Pexp_construct ({ txt = Lident "Type"; _ }, Some expression) ->
           ocaml_type := (
             match expression.pexp_desc with
-            | Pexp_constant (Pconst_string (s, _)) -> Longident.Lident s
+            | Pexp_constant (Pconst_string (s, _, _)) -> Longident.Lident s
             | Pexp_ident c -> c.txt
             | _ ->
               Location.raise_errorf ~loc:expression.pexp_loc
@@ -182,7 +182,7 @@ let rec construct_fields_list fields loc =
         Exp.apply ~loc
           (Exp.ident { txt = Longident.(
             Ldot (Ldot (Lident "Hdf5_caml", "Field"), "create")); loc })
-          [ Nolabel, Exp.constant ~loc (Pconst_string (field.Field.name, None));
+          [ Nolabel, Exp.constant ~loc (Pconst_string (field.Field.name, loc, None));
             Nolabel,
             Exp.construct ~loc
               { loc; txt = Longident.(
