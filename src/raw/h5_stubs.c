@@ -112,7 +112,7 @@ size_t string_array_val(value v, char ***a)
       *a = NULL;
       return length;
     }
-    strncpy(av, vv, avlen);
+    strcpy(av, vv);
     (*a)[i] = av;
   }
   return length;
